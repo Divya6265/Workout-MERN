@@ -1,0 +1,30 @@
+
+import useWorkoutsContext from "../hooks/useWorkoutsContex"
+import dele from './delete.png'
+import formatDistanceToNow from 'date-fns/formatDistanceToNow'
+const WorkoutDetails = ({workout}) =>{ 
+    const {dispatch} = useWorkoutsContext()
+    const handleClick = async () => {
+        const res = await fetch('api/workouts/' + workout._id,{
+            method: 'DELETE',
+        })
+        // contains doc/workout that we deleted
+        const json = await res.json()
+
+        if(res.ok){
+            dispatch({type:'DELETE_WORKOUT', payload:json})
+        }
+    }
+    return(
+        <div className="workout-details">
+            <h4>{workout.title}</h4>
+            <p> <strong>Reps: </strong> {workout.reps}</p>
+            <p> <strong>Loads (kg): </strong> {workout.load}</p>
+            
+            <p>{formatDistanceToNow(new Date(workout.createdAt),{addSuffix: true})}</p>
+            <span ><img src={dele} alt="no" onClick={handleClick}></img> </span>
+        </div>
+    )
+}
+
+export default WorkoutDetails;
